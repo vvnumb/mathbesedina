@@ -1,14 +1,21 @@
-from typing import Type, Optional, List
+from typing import Type, Optional, List, Any
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from common.dependencies.current_session import CurrentSession
-from common.orm.models.base import Base
+from src.models.base import Base
 
 
 class BaseMixin:
     model: Type[Base]
+    session: Session
+
+    def __init__(
+            self,
+            session: Any = CurrentSession()()
+    ):
+        self.session = next(session)
 
 
 class InsertMixin(BaseMixin):
@@ -16,33 +23,29 @@ class InsertMixin(BaseMixin):
     def insert(
             self,
             instance: "InsertMixin.model",
-            session: Session = Depends(CurrentSession())
     ) -> None:
-        session.add(instance=instance)
+        self.session.add(instance=instance)
 
 
 class RetrieveMixin(BaseMixin):
     """Добавляет метод получение одного объекта (или None) из бд"""
     def retrieve(
             self,
-            session: Session = Depends(CurrentSession()),
             *filters,
             **named_filters
     ) -> Optional["RetrieveMixin.model"]:
-        # todo: check this out!!!
-        return session.query(self.model).filter(*filters).filter_by(**named_filters).first()
+        return self.session.query(self.model).filter(*filters).filter_by(**named_filters).first()
 
 
 class ListMixin(BaseMixin):
     """Добавляет метод для получения списка объектов"""
     def list(
             self,
-            session: Session = Depends(CurrentSession()),
             *filters,
             **named_filters
     ) -> List["ListMixin.model"]:
-        # todo: check this out!!!
-        return session.query(self.model).filter(*filters).filter_by(**named_filters).all()
+        # todo: rework limit_offset pagination
+        return self.session.query(self.model).filter(*filters).filter_by(**named_filters).all()
 
 
 class UpdateMixin(BaseMixin):
@@ -51,11 +54,10 @@ class UpdateMixin(BaseMixin):
             self,
             instance: "UpdateMixin.model",
             data: dict,
-            session: Session = Depends(CurrentSession())
     ) -> "UpdateMixin.model":
         for field, value in data.items():
             setattr(instance, field, value)
-        session.query(self.model).update(instance)
+        self.session.query(self.model).update(instance)
         return instance
 
 
@@ -64,9 +66,8 @@ class DeleteMixin(BaseMixin):
     def delete(
             self,
             instance: "DeleteMixin.model",
-            session: Session = Depends(CurrentSession())
     ) -> None:
-        session.delete(instance)
+        self.session.delete(instance)
 
 
 class ReadMixin(RetrieveMixin, ListMixin):

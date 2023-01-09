@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from fastapi import APIRouter
 
@@ -13,8 +13,11 @@ def get_routers() -> List[APIRouter]:
     def read_main(request: Request):
         return {"message": "Hello World", "root_path": request.scope.get("root_path")}
 
+    from src.api import user_router
+
     routers: List[APIRouter] = [
-        router_v1
+        router_v1,
+        user_router,
     ]
 
     return routers

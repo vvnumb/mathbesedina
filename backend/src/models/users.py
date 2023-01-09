@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Boolean, String, DateTime
 
-from common.orm.models.base import Base
+from src.models.base import Base
 
 
 class User(Base):
@@ -44,16 +44,16 @@ class User(Base):
     )
 
     is_active = Column(
-        Boolean(),
+        Boolean,
         default=True,
         comment='locked or unlocked',
     )
     is_superuser = Column(
-        Boolean(),
+        Boolean,
         default=False,
     )
     is_subscribed = Column(
-        Boolean(),
+        Boolean,
         default=False,
     )
 

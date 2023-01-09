@@ -71,8 +71,7 @@ class AlembicSettings(BaseSettings):
 
     @classmethod
     def generate(cls):
-        # note: необходимо добавлять модели в models.__init__ target_metadata
-        from common.orm.models.base import Base
+        from src.models.base import Base
 
         return cls(
             target_metadata=Base.metadata,
