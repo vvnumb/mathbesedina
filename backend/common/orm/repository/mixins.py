@@ -1,6 +1,5 @@
 from typing import Type, Optional, List, Any
 
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
 from common.dependencies.current_session import CurrentSession
