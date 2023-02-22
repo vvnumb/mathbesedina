@@ -18,7 +18,7 @@ class UvicornSettings(BaseEnvSettings):
 
     port: int = Field(8000, env="PORT")
     reload: bool = Field(True, env="RELOAD")
-    host: str = Field("0.0.0.0", env="HOST")
+    host: str = Field("127.0.0.1", env="HOST")
     use_colors: bool = Field(True, env="USE_COLORS")
 
 
@@ -43,7 +43,7 @@ class DatabaseSettings(BaseEnvSettings):
     password = Field("postgres", env="POSTGRES_PASSWORD")
     host = Field("localhost", env="POSTGRES_HOST")
     port = Field("5432", env="POSTGRES_PORT")
-    database = Field("mathbesedina", env="POSTGRES_DATABASE")
+    database = Field("mathbesedina", env="POSTGRES_DB")
     pool_size = Field(10, env="POSTGRES_POOL_SIZE")
 
     @property
