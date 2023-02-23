@@ -56,6 +56,7 @@ class User(Base):
         Boolean,
         default=False,
     )
+    # todo: класс ученика
 
     created_at = Column(DateTime())
     updated_at = Column(DateTime())

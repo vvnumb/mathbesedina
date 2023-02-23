@@ -25,7 +25,7 @@ class UvicornSettings(BaseEnvSettings):
 class ApplicationSettings(BaseEnvSettings):
     """Параметры приложения"""
     title: str = Field("mathbesedina.ru")
-    debug: bool = Field(True, env="DEBUG")
+    debug: bool = Field(False, env="DEBUG")
     docs_url = Field("/api/v1/docs")
 
 
