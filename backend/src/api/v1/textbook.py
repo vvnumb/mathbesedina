@@ -14,7 +14,7 @@ def get_textbooks(
 ) -> List[TextbookResponseSchema]:
     """Получение учебников. Возможен фильтр по классу"""
     resources = dict(
-        textbooks_repo=TextbookRepository
+        textbook_repo=TextbookRepository
     )
     get_textbooks_case = GetTextbooksCase(**resources)
     return get_textbooks_case(school_class)
