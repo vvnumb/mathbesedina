@@ -3,13 +3,14 @@ from sqlalchemy.orm import Session
 
 from common.dependencies.current_session import CurrentSession
 
-router = APIRouter()
+router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @router.get("/")
 def get_single(
     session: Session = Depends(CurrentSession())
 ):
+    """Ендпоинт-заглушка. Проверяет коннект к бд. Если все ок - возвращает null"""
     from src.repositories.user import UserRepository
     user_repo = UserRepository()
     from src.models import User

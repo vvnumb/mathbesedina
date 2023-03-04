@@ -5,7 +5,7 @@ from src.repositories.textbook import TextbookRepository
 from src.schemas import TextbookResponseSchema
 from src.use_cases.get_textbooks import GetTextbooksCase
 
-router = APIRouter(prefix="/textbooks", tags=["textbooks"])
+router = APIRouter(prefix="/textbooks", tags=["Textbooks"])
 
 
 @router.get("/")
