@@ -1,8 +1,10 @@
 from typing import Type, Optional, List, Any
 
+from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from common.dependencies.current_session import CurrentSession
+from common.dependencies.current_session import CurrentSession, get_session
+from config import database_config
 from src.models.base import Base
 
 
@@ -12,9 +14,9 @@ class BaseMixin:
 
     def __init__(
             self,
-            session: Any = CurrentSession()()
+            session: Any = next(get_session())
     ):
-        self.session = next(session)
+        self.session = session
 
 
 class InsertMixin(BaseMixin):

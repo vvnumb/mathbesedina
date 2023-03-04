@@ -13,3 +13,8 @@ class CurrentSession(BaseDependency):
             yield self.session
         finally:
             self.session.close()
+
+
+def get_session():
+    with database_config.session_maker_class() as session:
+        yield session

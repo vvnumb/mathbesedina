@@ -15,4 +15,3 @@ class IdMixin:
     @declared_attr
     def id(cls):
         return Column(Integer, primary_key=True, autoincrement=True)
-
