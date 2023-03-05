@@ -1,10 +1,8 @@
 from typing import Type, Optional, List, Any
 
-from fastapi import Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
-from common.dependencies.current_session import CurrentSession, get_session
-from config import database_config
+from common.dependencies.current_session import get_session
 from src.models.base import Base
 
 
@@ -17,6 +15,18 @@ class BaseMixin:
             session: Any = next(get_session())
     ):
         self.session = session
+        self.model_query = self.session.query(self.model)
+
+
+class JoinMixin(BaseMixin):
+
+    def join(
+            self,
+            join_model: Type[Base],
+            *conditions
+    ) -> Query:
+        self.model_query = self.model_query.join(join_model, *conditions)
+        return self.model_query
 
 
 class InsertMixin(BaseMixin):
@@ -35,7 +45,7 @@ class RetrieveMixin(BaseMixin):
             *filters,
             **named_filters
     ) -> Optional["RetrieveMixin.model"]:
-        return self.session.query(self.model).filter(*filters).filter_by(**named_filters).first()
+        return self.model_query.filter(*filters).filter_by(**named_filters).first()
 
 
 class ListMixin(BaseMixin):
@@ -45,8 +55,8 @@ class ListMixin(BaseMixin):
             *filters,
             **named_filters
     ) -> List["ListMixin.model"]:
-        # todo: rework limit_offset pagination
-        return self.session.query(self.model).filter(*filters).filter_by(**named_filters).all()
+        # todo: Можно добавить пагинацию внутри self.model_query, либо добавить именованные параметры
+        return self.model_query.filter(*filters).filter_by(**named_filters).all()
 
 
 class UpdateMixin(BaseMixin):
@@ -58,7 +68,7 @@ class UpdateMixin(BaseMixin):
     ) -> "UpdateMixin.model":
         for field, value in data.items():
             setattr(instance, field, value)
-        self.session.query(self.model).update(instance)
+        self.model_query.update(instance)
         return instance
 
 
@@ -71,7 +81,7 @@ class DeleteMixin(BaseMixin):
         self.session.delete(instance)
 
 
-class ReadMixin(RetrieveMixin, ListMixin):
+class ReadMixin(RetrieveMixin, ListMixin, JoinMixin):
     """Позволяет читать данные из бд"""
 
 
