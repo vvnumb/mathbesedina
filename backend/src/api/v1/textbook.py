@@ -14,7 +14,7 @@ def get_textbooks(
 ) -> List[TextbookResponseSchema]:
     """Получение учебников. Возможен фильтр по классу"""
     resources = dict(
-        textbook_repo=TextbookRepository
+        textbook_repo=TextbookRepository()
     )
     get_textbooks_case = GetTextbooksCase(**resources)
     return get_textbooks_case(school_class)
@@ -26,8 +26,7 @@ def get_topics(
 ) -> List[ShortTopicResponseSchema]:
     """Получение списка тем по учебнику"""
     resources = dict(
-        topic_repo=TopicRepository
+        topic_repo=TopicRepository()
     )
-
     get_topics_case = GetTopicsCase(**resources)
     return get_topics_case(textbook_id)

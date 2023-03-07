@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional
 
 from common.service_interface import SyncService
 from src.repositories.textbook import TextbookRepository
@@ -8,9 +8,9 @@ class GetTextbooksCase(SyncService):
     """Получение учебников"""
     def __init__(
         self,
-        textbook_repo: Type[TextbookRepository]
+        textbook_repo: TextbookRepository
     ):
-        self.textbook_repo = textbook_repo()
+        self.textbook_repo = textbook_repo
 
     def __call__(self, school_class: Optional[int] = None):
         filters = dict()
