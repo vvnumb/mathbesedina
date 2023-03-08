@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-3f+j!@_(yhu^s#3lvrrf#*imcz#uqqxg5(b3*&5-fv6+)52dx&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -78,8 +78,6 @@ WSGI_APPLICATION = 'admin.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASE_ROUTERS = ["admin.routers.DatabaseRouter"]
 
-AUTH_USER_MODEL = "main.CustomUser"
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -113,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
