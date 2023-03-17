@@ -45,3 +45,30 @@ class SiteUser(models.Model):
         db_table = "user"
         verbose_name = "Пользователь сайта"
         verbose_name_plural = "Пользователи сайта"
+
+
+class Textbook(models.Model):
+    """Учебник"""
+    school_class = models.IntegerField()
+    title = models.CharField(_("Название"), max_length=127)
+    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+
+    class Meta:
+        managed = False
+        db_table = "textbook"
+        verbose_name = "Учебник"
+        verbose_name_plural = "Учебники"
+
+
+class Topic(models.Model):
+    """Тема урока"""
+    textbook = models.ForeignKey(Textbook, on_delete=models.SET_NULL, blank=True, null=True)
+    title = models.CharField(_("Название"), max_length=127)
+    description = models.CharField(_("Описание"), max_length=256)
+    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+
+    class Meta:
+        managed = False
+        db_table = "topic"
+        verbose_name = "Тема урока"
+        verbose_name_plural = "Темы урока"

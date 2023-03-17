@@ -1,5 +1,6 @@
 from django.contrib import admin
-from main.models import SiteUser
+from main.models import SiteUser, Topic, Textbook
 
-# Register your models here.
 admin.site.register(SiteUser)
+admin.site.register(Textbook)
+admin.site.register(Topic)
