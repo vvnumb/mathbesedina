@@ -1,0 +1,41 @@
+version: '1.4'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    container_name: postgres
+    env_file:
+      - ./envs/db_env.env
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5438:5432'
+
+  backend:
+    # todo: создать скрипт для миграции
+    build: .
+    container_name: main_backend
+    command: uvicorn config.asgi:application --host 0.0.0.0 --port 80 --reload
+    volumes:
+      - .:/app
+    ports:
+      - "80:80"
+    env_file: ./envs/backend.env
+    depends_on:
+      - db
+  admin:
+    build: ../admin
+    container_name: admin_pannel
+#    command: python manage.py runserver
+    ports:
+      - "8001:8001"
+    env_file: ./envs/admin.env
+    depends_on:
+      - db
+
+
+volumes:
+  postgres_data:
