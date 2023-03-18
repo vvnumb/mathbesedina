@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: postgres
     env_file:
-      - ./envs/db_env.env
+      - ./envs/postgres.env
     logging:
       options:
         max-size: 10m
