@@ -5,6 +5,7 @@ from main.models import CustomUser as User
 
 
 def create_superuser(apps, schema_editor):
+    # todo: get username and password from envs
     superuser = User()
     superuser.is_active = True
     superuser.is_superuser = True

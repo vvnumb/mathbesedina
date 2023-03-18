@@ -17,7 +17,6 @@ services:
       - postgres_data:/data/postgres
 
   backend:
-    # todo: создать скрипт для миграции
     build: ../backend
     container_name: main_backend
     command: sh entrypoint.sh
