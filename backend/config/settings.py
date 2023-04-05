@@ -8,7 +8,6 @@ from sqlalchemy.orm import sessionmaker
 class BaseEnvSettings(BaseSettings):
     """Базовый класс для чтения переменных из окружения"""
     class Config:
-        env_file = ".env"
         env_file_encoding = "utf-8"
 
 
