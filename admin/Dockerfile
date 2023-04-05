@@ -11,4 +11,4 @@ COPY ./ /app
 RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 #EXPOSE 8001
-CMD ["python", "manage.py", "runserver", "127.0.0.1:8001", "--noreload"]
+#CMD ["python", "manage.py", "runserver", "127.0.0.1:8001", "--noreload"]
