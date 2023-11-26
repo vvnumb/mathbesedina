@@ -16,29 +16,6 @@ class Textbook(Base, IdMixin):
     topics = relationship("Topic", back_populates="textbook", uselist=True, )
 
 
-class Topic(IdMixin, Base):
-    """Тема"""
-    textbook_id = Column(
-        Integer,
-        ForeignKey("textbook.id"),
-        nullable=False,
-        index=True,
-    )
-    title = Column(String, comment="название темы")
-    description = Column(Text, comment="описание занятия")
-    slug = Column(String, unique=True, comment="строка для url")  # mb deprecated
-
-    videos = relationship("VideoXTopic", back_populates="topic")
-    tests = relationship("TestXTopic", back_populates="topic")
-    textbook = relationship("Textbook", back_populates="topics")
-
-
-class Video(IdMixin, Base):
-    """Видео"""
-    title = Column(String, comment="название видео")
-    link = Column(String, comment="ссылка на видео в источнике")
-
-
 class VideoXTopic(Base):
     """Сопоставление темам - видео"""
     __table_args__ = {
@@ -56,7 +33,32 @@ class VideoXTopic(Base):
         primary_key=True,
     )
 
-    topic = relationship("Topic", back_populates="videos")
+
+
+class Topic(IdMixin, Base):
+    """Тема"""
+    textbook_id = Column(
+        Integer,
+        ForeignKey("textbook.id"),
+        nullable=False,
+        index=True,
+    )
+    title = Column(String, comment="название темы")
+    description = Column(Text, comment="описание занятия")
+    slug = Column(String, unique=True, comment="строка для url")  # mb deprecated
+
+    videos = relationship("Video", secondary=VideoXTopic.__tablename__, back_populates="topics")
+    tests = relationship("TestXTopic", back_populates="topic")
+    textbook = relationship("Textbook", back_populates="topics")
+
+
+class Video(IdMixin, Base):
+    """Видео"""
+    title = Column(String, comment="название видео")
+    link = Column(String, comment="ссылка на видео в источнике")
+
+    topics = relationship("Topic", secondary=VideoXTopic.__tablename__,
+                          back_populates="videos")
 
 
 class TaskAnswer(IdMixin, Base):

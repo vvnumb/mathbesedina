@@ -59,7 +59,7 @@ class DatabaseSettings(BaseEnvSettings):
         )
 
     @property
-    def session_maker_class(self):
+    def session_maker(self):
         return sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
 

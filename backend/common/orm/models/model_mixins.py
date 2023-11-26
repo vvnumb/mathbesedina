@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_mixin, declared_attr
 
 @declarative_mixin
 class IdMixin:
-    """добавляет в модель стандартное поле id"""
+    """Добавляет в модель стандартное поле id"""
 
     @declared_attr
     def __table_args__(cls):
