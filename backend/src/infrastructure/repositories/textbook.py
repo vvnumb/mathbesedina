@@ -12,7 +12,11 @@ class TopicRepository(CRUDRepository[Topic]):
     _model = Topic
     
     def fetch_videos(self):
-        self.model_query = self.model_query.options(joinedload(Topic.videos))
+        self._model_query = self._model_query.options(joinedload(Topic.videos))
+        return self
+    
+    def fetch_tests(self):
+        self._model_query = self._model_query.options(joinedload(Topic.tests))
         return self
 
 

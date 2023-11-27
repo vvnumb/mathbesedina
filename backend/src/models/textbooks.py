@@ -34,6 +34,23 @@ class VideoXTopic(Base):
     )
 
 
+class TestXTopic(Base):
+    """Сопоставление тестов для тем"""
+    __table_args__ = {
+        "extend_existing": True,
+    }
+    __tablename__ = "test_x_topic"
+    test_id = Column(
+        Integer,
+        ForeignKey("test.id"),
+        primary_key=True,
+    )
+    topic_id = Column(
+        Integer,
+        ForeignKey("topic.id"),
+        primary_key=True,
+    )
+
 
 class Topic(IdMixin, Base):
     """Тема"""
@@ -48,7 +65,7 @@ class Topic(IdMixin, Base):
     slug = Column(String, unique=True, comment="строка для url")  # mb deprecated
 
     videos = relationship("Video", secondary=VideoXTopic.__tablename__, back_populates="topics")
-    tests = relationship("TestXTopic", back_populates="topic")
+    tests = relationship("Test", secondary=TestXTopic.__tablename__, back_populates="topics")
     textbook = relationship("Textbook", back_populates="topics")
 
 
@@ -73,7 +90,6 @@ class TaskAnswer(IdMixin, Base):
 
     task = relationship("Task", backref="answers", foreign_keys=[task_id])
 
-
 class Task(IdMixin, Base):
     """Задание"""
     task_type = Column(ORMEnum(TaskType))
@@ -91,7 +107,8 @@ class Task(IdMixin, Base):
     )
 
     test = relationship("Test", back_populates="tasks", foreign_keys=[test_id])
-    # answers = relationship("TaskAnswer", back_populates="task", uselist=True)
+    # note: есть поле answers - задается через TaskAnswer backref
+    # answers = relationship("TaskAnswer", backref="task", uselist=True)
 
 
 class Test(IdMixin, Base):
@@ -101,26 +118,5 @@ class Test(IdMixin, Base):
     slug = Column(String, unique=True, comment="строка для url")  # mb deprecated
     school_class = Column(Integer)
 
-    topics = relationship("TestXTopic", back_populates="test")
+    topics = relationship("Topic", secondary=TestXTopic.__tablename__, back_populates="tests")
     tasks = relationship("Task", back_populates="test", uselist=True)
-
-
-class TestXTopic(Base):
-    """Сопоставление тестов для тем"""
-    __table_args__ = {
-        "extend_existing": True,
-    }
-    __tablename__ = "test_x_topic"
-    test_id = Column(
-        Integer,
-        ForeignKey("test.id"),
-        primary_key=True,
-    )
-    topic_id = Column(
-        Integer,
-        ForeignKey("topic.id"),
-        primary_key=True,
-    )
-
-    test = relationship("Test", back_populates="topics")
-    topic = relationship("Topic", back_populates="tests")

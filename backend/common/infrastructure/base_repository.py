@@ -17,7 +17,7 @@ class BaseMixin(Generic[T]):
             session: Session
     ):
         self._session = session
-        self.model_query = self._session.query(self._model)
+        self._model_query = self._session.query(self._model)
 
 
 
@@ -36,7 +36,7 @@ class RetrieveMixin(BaseMixin[T]):
             self,
             *filters,
     ) -> Optional[T]:
-        model = self.model_query.filter(*filters).first()
+        model = self._model_query.filter(*filters).first()
         self._session.expunge_all()
         return model
 
@@ -48,7 +48,7 @@ class ListMixin(BaseMixin[T]):
             *filters,
     ) -> List[T]:
         # todo: Можно добавить пагинацию внутри self.model_query, либо добавить именованные параметры
-        models = self.model_query.filter(*filters).all()
+        models = self._model_query.filter(*filters).all()
         self._session.expunge_all()
         return models
 
@@ -59,7 +59,7 @@ class UpdateMixin(BaseMixin[T]):
             self,
             instance: T,
     ) -> T:
-        self.model_query.update(instance)
+        self._model_query.update(instance)
         return instance
 
 

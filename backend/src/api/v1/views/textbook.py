@@ -4,8 +4,7 @@ from fastapi import APIRouter, Depends, Query
 from common.registry import Registry
 from src.api.v1.schemas import TextbookResponseSchema, ShortTopicResponseSchema
 from src.api.v1.schemas.topic import FullTopicResponseSchema
-from src.use_cases import GetTextbooksCase, GetTopicsCase
-from src.use_cases.get_single_topic import GetSingleTopicCase
+from src.api.v1.use_cases.textbook import GetSingleTopicCase, GetTextbooksCase, GetTopicsCase
 
 router = APIRouter(tags=["Textbooks"])
 
@@ -19,7 +18,7 @@ def get_textbooks(
     return get_textbooks_case(school_class)
 
 
-@router.get("/topics", response_model=List[ShortTopicResponseSchema])
+@router.get("/topics/list", response_model=List[ShortTopicResponseSchema])
 def get_topics(
     textbook_id: int = Query(...),
     get_topics_case: GetTopicsCase = Depends(Registry.get_topics_case)
@@ -28,7 +27,7 @@ def get_topics(
     return get_topics_case(textbook_id)
 
 
-@router.get("/topic", response_model=FullTopicResponseSchema)
+@router.get("/topics", response_model=FullTopicResponseSchema)
 def get_single_topic_info(
         topic_id: int = Query(...),
         get_single_topic_case: GetSingleTopicCase = Depends(Registry.get_single_topic_case)

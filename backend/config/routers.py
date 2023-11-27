@@ -4,11 +4,12 @@ from fastapi import APIRouter
 
 
 def get_routers() -> List[APIRouter]:
-    from src.api import user_router, textbook_router
+    from src.api import user_router, textbook_router, test_router
 
     routers: List[APIRouter] = [
         user_router,
-        textbook_router
+        textbook_router,
+        test_router,
     ]
 
     return routers

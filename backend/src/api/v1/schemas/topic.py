@@ -11,8 +11,14 @@ class ShortTopicResponseSchema(BaseResponseSchema):
 
 
 class _TopicVideoSchema(BaseResponseSchema):
+    """Внутренняя структура видео внутри ответа темы"""
     title: Optional[str]
     link: str
+    
+class _TopicTestSchema(BaseResponseSchema):
+    """Внутренняя структура теста внутри ответа темы"""
+    id: int
+    title: str
 
 
 class FullTopicResponseSchema(BaseResponseSchema):
@@ -20,5 +26,5 @@ class FullTopicResponseSchema(BaseResponseSchema):
     id: int
     title: str
     description: str
-    slug: Optional[str]
     videos: List[_TopicVideoSchema]
+    tests: List[_TopicTestSchema]
