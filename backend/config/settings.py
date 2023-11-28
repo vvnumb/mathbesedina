@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from pydantic import BaseSettings, Field
+from pydantic.v1 import BaseSettings, Field
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

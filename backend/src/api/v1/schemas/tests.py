@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from common.orm.models.enums import TaskType
 from src.api.v1.schemas import BaseResponseSchema
+from src.api.v1.schemas.base import BaseResponseRootSchema
 
 
 class ShortTestResponseSchema(BaseResponseSchema):
@@ -24,5 +25,5 @@ class _TestTaskSchema(BaseResponseSchema):
     answers: List[_TestAnswerShortSchema]
     
 
-class FullTestResponseSchema(BaseResponseSchema):
-    __root__ : List[_TestTaskSchema]
+class FullTestResponseSchema(BaseResponseRootSchema):
+    root : List[_TestTaskSchema]

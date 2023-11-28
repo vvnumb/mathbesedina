@@ -1,6 +1,7 @@
 from config import database_config
 from src.api.v1.use_cases.test import GetTestsListCase
 from src.api.v1.use_cases.test.get_single_test import GetSingleTestCase
+from src.api.v1.use_cases.test.review_test import ReviewTestCase
 from src.api.v1.use_cases.textbook import GetTextbooksCase, GetTopicsCase
 from src.infrastructure.unit_of_work.test import TestUnitOfWork
 from src.infrastructure.unit_of_work.textbook import TopicUnitOfWork
@@ -36,4 +37,8 @@ class Registry:
 	@staticmethod
 	def get_single_test_case() -> GetSingleTestCase:
 		return GetSingleTestCase(uow=Registry.test_unit_of_work())
+	
+	@staticmethod
+	def get_review_test_case() -> ReviewTestCase:
+		return ReviewTestCase(uow=Registry.test_unit_of_work())
 	

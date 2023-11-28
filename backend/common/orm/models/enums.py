@@ -6,5 +6,3 @@ class TaskType(str, Enum):
     SINGLE = "SINGLE"
     FULL = "FULL"
     MANY = "MANY"
-
-

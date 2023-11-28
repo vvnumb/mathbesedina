@@ -1,10 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Body, Depends, Query
 
 from common.registry import Registry
+from src.api.v1.schemas.dtos.done_test import DoneTestDTOSchema
 from src.api.v1.schemas.tests import FullTestResponseSchema, ShortTestResponseSchema
 from src.api.v1.use_cases.test.get_single_test import GetSingleTestCase
+from src.api.v1.use_cases.test.review_test import ReviewTestCase
 
 router = APIRouter(tags=["Tests"])
 
@@ -26,4 +28,17 @@ def get_list_of_all_tests(
 	note: будет верификация по пользователю
 	"""
 	return get_test_case(test_id)
+
+
+@router.post("/tests/review")
+def get_list_of_all_tests(
+		solved_test: DoneTestDTOSchema = Body(...),
+		review_test_case: ReviewTestCase = Depends(Registry.get_review_test_case)
+):
+	"""Получение конкретного теста
+	note: будет верификация по пользователю
+	"""
+	# todo: нужен контракт респонса + тест задач Many + Full
+	values = review_test_case(solved_test)
+	return {"first": values[0], "second": values[1]}
 	

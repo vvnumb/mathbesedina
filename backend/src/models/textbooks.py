@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, \
+from sqlalchemy import Boolean, Column, Integer, String, Text, ForeignKey, \
     Enum as ORMEnum
 from sqlalchemy.orm import relationship
 
@@ -87,6 +87,7 @@ class TaskAnswer(IdMixin, Base):
         nullable=True, index=True
     )
     title = Column(String, comment="текст варианта ответа")
+    is_right = Column(Boolean, nullable=False, server_default='False', default=False)
 
     task = relationship("Task", backref="answers", foreign_keys=[task_id])
 
@@ -94,11 +95,7 @@ class Task(IdMixin, Base):
     """Задание"""
     task_type = Column(ORMEnum(TaskType))
     task_text = Column(Text)
-    right_answer = Column(
-        Integer,
-        ForeignKey("task_answer.id"),
-        nullable=False, index=True
-    )
+
     image_link = Column(String, comment="ссылка на картинку для задачи")
     test_id = Column(
         Integer,

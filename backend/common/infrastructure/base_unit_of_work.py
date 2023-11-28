@@ -31,10 +31,7 @@ class PostgresUnitOfWork(AbstractUnitOfWork, ABC):
 	
 	def rollback(self):
 		self._session.rollback()
-		self._session.expunge_all()
-		self._session.close()
 	
 	def __exit__(self, exc_type, exc_val, exc_tb):
 		super().__exit__(exc_type, exc_val, exc_tb)
 		self._session.close()
-	

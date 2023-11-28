@@ -12,4 +12,5 @@ class GetTestsListCase(SyncService):
 	
 	def __call__(self) -> List[Test]:
 		with self.uow:
+			# todo: надо убрать варианты ответы в типе TaskType.FULL
 			return self.uow.tests.get_list()
