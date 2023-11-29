@@ -27,3 +27,7 @@ class _TestTaskSchema(BaseResponseSchema):
 
 class FullTestResponseSchema(BaseResponseRootSchema):
     root : List[_TestTaskSchema]
+
+
+class ReviewedTestSchema(BaseResponseSchema):
+    correct_answers: int

@@ -6,16 +6,16 @@ from typing import Dict, List, Set, Tuple
 from common.orm.models.enums import TaskType
 from common.service_interface import SyncService
 from src.api.v1.schemas.dtos.done_test import DoneTestDTOSchema, _ResolvedTask
+from src.api.v1.schemas.tests import ReviewedTestSchema
 from src.infrastructure.unit_of_work.test import TestUnitOfWork
-from src.models import TaskAnswer
+from src.models import Task, TaskAnswer
 
 
 @dataclass(slots=True, frozen=True, kw_only=True)
 class ReviewTestCase(SyncService):
 	uow: TestUnitOfWork
 	
-	def __call__(self, resolved_test: DoneTestDTOSchema) -> Tuple[int, int]:
-		# todo: нужно протестить
+	def __call__(self, resolved_test: DoneTestDTOSchema) -> ReviewedTestSchema:
 		tasks: List[_ResolvedTask] = resolved_test.root
 		task_ids: Set[int] = {taks.id for taks in tasks}
 		
@@ -35,6 +35,8 @@ class ReviewTestCase(SyncService):
 		
 		for done_task in tasks:
 			done_answers = done_task.answer
+			if done_answers is None:
+				continue
 			if not isinstance(done_answers, list):
 				done_answers = [done_answers]
 			
@@ -46,8 +48,8 @@ class ReviewTestCase(SyncService):
 			is_correct = self.__check_answer(done_task, done_answers, right_answers)
 			right_answers_count += int(is_correct)
 			
-			
-		return right_answers_count, len(tasks)
+		# note: len(tasks) может содержать не все задачи теста
+		return ReviewedTestSchema(correct_answers=right_answers_count)
 	
 	def __check_answer(self, task, done_answers, right_answers) -> bool:
 		is_correct: bool = False
