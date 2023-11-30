@@ -76,3 +76,10 @@ class AlembicSettings(BaseSettings):
             target_metadata=Base.metadata,
             connection=DatabaseSettings()
         )
+
+
+class JWTSettings(BaseEnvSettings):
+    SECRET_KEY: str = Field("SuPeRsEcReTkEy", env="JWT_SECRET")
+    ALGORITHM: str = Field("HS256", env="JWT_ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(30)
+    TOKEN_TYPE: str = Field("bearer")
