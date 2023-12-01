@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from pydantic import model_validator
+
 from common.orm.models.enums import TaskType
 from src.api.v1.schemas import BaseResponseSchema
 from src.api.v1.schemas.base import BaseResponseRootSchema
@@ -23,6 +25,13 @@ class _TestTaskSchema(BaseResponseSchema):
     task_text: str
     image_link: Optional[str]
     answers: List[_TestAnswerShortSchema]
+    
+    @model_validator(mode="before")
+    @classmethod
+    def hide_full_answers(cls, data):
+        if data.task_type == TaskType.FULL:
+            data.answers = []
+        return data
     
 
 class FullTestResponseSchema(BaseResponseRootSchema):

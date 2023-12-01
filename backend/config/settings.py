@@ -73,7 +73,7 @@ class AlembicSettings(BaseSettings):
         from src.models.base import Base
 
         return cls(
-            target_metadata=Base.metadata,
+            target_metadata=Base.metadata,  # noqa
             connection=DatabaseSettings()
         )
 

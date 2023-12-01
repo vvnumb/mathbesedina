@@ -11,10 +11,10 @@ from src.api.v1.use_cases.auth.authenticate_case import AuthenticateCase
 router = APIRouter(prefix="/auth", tags=["Authorization"])
 
 
-@router.post("/token", response_model=Token)
+@router.post("/login", response_model=Token)
 def login_for_access_token(
 		form_data: OAuth2PasswordRequestForm = Depends(),
-		auth_case: AuthenticateCase = Depends(Registry.authentication_service)
+		auth_case: AuthenticateCase = Depends(Registry.authentication_service),
 ):
 	user = auth_case(form_data)
 	
