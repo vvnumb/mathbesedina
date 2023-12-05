@@ -23,7 +23,8 @@ class SiteUser(models.Model):
 
     email = models.EmailField(_("почта"), unique=True)
     username = models.CharField(_("никнейм"), max_length=127, unique=True)
-    password = models.CharField(_("password"), max_length=127, db_column="hashed_password", blank=True, default="")
+    hashed_password = models.CharField(_("password"), max_length=127,
+                                       db_column="hashed_password", blank=True, default="")
 
     is_active = models.BooleanField(_("Активен"), default=True)
     is_superuser = models.BooleanField(_("Админ"), default=False)
@@ -60,15 +61,73 @@ class Textbook(models.Model):
         verbose_name_plural = "Учебники"
 
 
+class Video(models.Model):
+    title = models.CharField(_("Название видео"), max_length=127)
+    link = models.CharField(_("Ссылка на видео в источнике"), max_length=127)
+    
+    class Meta:
+        managed = False
+        db_table = "video"
+        verbose_name = "Видео"
+        verbose_name_plural = "Видео"
+
+
 class Topic(models.Model):
     """Тема урока"""
     textbook = models.ForeignKey(Textbook, on_delete=models.SET_NULL, blank=True, null=True)
     title = models.CharField(_("Название"), max_length=127)
     description = models.CharField(_("Описание"), max_length=256)
-    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+    slug = models.CharField(_("Название в ссылке"), max_length=127, blank=True, null=True)
+    
+    videos = models.ManyToManyField(
+        to="Video",
+        through="VideoXTopic",
+        through_fields=("topic", "video"),
+        blank=True
+    )
+    tests = models.ManyToManyField(
+        "Test",
+        through="TestXTopic"
+    )
 
     class Meta:
         managed = False
         db_table = "topic"
         verbose_name = "Тема урока"
         verbose_name_plural = "Темы урока"
+
+
+class Test(models.Model):
+    title = models.CharField(_("Название"), max_length=127)
+    description = models.CharField(_("Описание"), max_length=256)
+    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+    school_class = models.IntegerField()
+    
+    topics = models.ManyToManyField(
+        Topic,
+        through="TestXTopic"
+    )
+    
+    class Meta:
+        managed = False
+        db_table = "test"
+        verbose_name = "Тест"
+        verbose_name_plural = "Тесты"
+
+
+class VideoXTopic(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    
+    class Meta:
+        managed = False
+        db_table = "video_x_topic"
+
+
+class TestXTopic(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+    
+    class Meta:
+        managed = False
+        db_table = "test_x_topic"

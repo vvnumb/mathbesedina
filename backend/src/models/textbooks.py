@@ -91,6 +91,7 @@ class TaskAnswer(IdMixin, Base):
 
     task = relationship("Task", backref="answers", foreign_keys=[task_id])
 
+
 class Task(IdMixin, Base):
     """Задание"""
     task_type = Column(ORMEnum(TaskType))
