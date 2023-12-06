@@ -39,7 +39,7 @@ class SiteUser(models.Model):
         full_name = f"{self.last_name} {self.name}"
         if self.middle_name:
             full_name += f" {self.middle_name}"
-        return full_name
+        return f"Ученик {full_name}"
 
     class Meta:
         managed = False
@@ -53,6 +53,9 @@ class Textbook(models.Model):
     school_class = models.IntegerField()
     title = models.CharField(_("Название"), max_length=127)
     slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+    
+    def __str__(self):
+        return f"Учебник {self.title}"
 
     class Meta:
         managed = False
@@ -64,6 +67,9 @@ class Textbook(models.Model):
 class Video(models.Model):
     title = models.CharField(_("Название видео"), max_length=127)
     link = models.CharField(_("Ссылка на видео в источнике"), max_length=127)
+    
+    def __str__(self):
+        return f"Видео {self.title}"
     
     class Meta:
         managed = False
@@ -86,10 +92,15 @@ class Topic(models.Model):
         blank=True
     )
     tests = models.ManyToManyField(
-        "Test",
-        through="TestXTopic"
+        to="Test",
+        through="TestXTopic",
+        through_fields=("topic", "test"),
+        blank=True
     )
-
+    
+    def __str__(self):
+        return f"Тема {self.textbook.title}| {self.title}"
+    
     class Meta:
         managed = False
         db_table = "topic"
@@ -100,13 +111,19 @@ class Topic(models.Model):
 class Test(models.Model):
     title = models.CharField(_("Название"), max_length=127)
     description = models.CharField(_("Описание"), max_length=256)
-    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True)
+    slug = models.CharField(_("Название в ссылке"), max_length=127, unique=True, blank=True,
+                            null=True)
     school_class = models.IntegerField()
     
     topics = models.ManyToManyField(
-        Topic,
-        through="TestXTopic"
+        to="Topic",
+        through="TestXTopic",
+        through_fields=("test", "topic"),
+        blank=True
     )
+    
+    def __str__(self):
+        return f"Тест|{self.school_class}| {self.title}"
     
     class Meta:
         managed = False
@@ -122,6 +139,7 @@ class VideoXTopic(models.Model):
     class Meta:
         managed = False
         db_table = "video_x_topic"
+        auto_created = True
 
 
 class TestXTopic(models.Model):
@@ -131,3 +149,4 @@ class TestXTopic(models.Model):
     class Meta:
         managed = False
         db_table = "test_x_topic"
+        auto_created = True
